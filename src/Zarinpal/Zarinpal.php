@@ -24,7 +24,7 @@ class Zarinpal extends PortAbstract implements PortInterface
 	 * @var string
 	 */
 	protected $iranServer = 'https://ir.zarinpal.com/pg/services/WebGate/wsdl';
-    
+
     /**
 	 * Address of sandbox SOAP server
 	 *
@@ -66,7 +66,7 @@ class Zarinpal extends PortAbstract implements PortInterface
 	 * @var string
 	 */
 	protected $gateUrl = 'https://www.zarinpal.com/pg/StartPay/';
-    
+
     /**
 	 * Address of sandbox gate for redirect
 	 *
@@ -146,6 +146,15 @@ class Zarinpal extends PortAbstract implements PortInterface
 		return $this;
 	}
 
+    function setInformation($MerchantID,$Email,$Mobile,$Description)
+    {
+        $this->MerchantID = $MerchantID;
+        $this->Description = $Description;
+        $this->Email = $Email;
+        $this->Mobile = $Mobile;
+        return $this;
+    }
+
 	/**
 	 * Gets callback url
 	 * @return string
@@ -170,12 +179,12 @@ class Zarinpal extends PortAbstract implements PortInterface
 		$this->newTransaction();
 
 		$fields = array(
-			'MerchantID' => $this->config->get('gateway.zarinpal.merchant-id'),
+			'MerchantID' => $this->MerchantID,
 			'Amount' => $this->amount,
 			'CallbackURL' => $this->getCallback(),
-			'Description' => $this->description ? $this->description : $this->config->get('gateway.zarinpal.description', ''),
-			'Email' => $this->email ? $this->email :$this->config->get('gateway.zarinpal.email', ''),
-			'Mobile' => $this->mobileNumber ? $this->mobileNumber : $this->config->get('gateway.zarinpal.mobile', ''),
+			'Description' => $this->Description,
+			'Email' => $this->Email,
+			'Mobile' => $this->Mobile,
 		);
 
 		try {
@@ -269,7 +278,7 @@ class Zarinpal extends PortAbstract implements PortInterface
 			case 'iran':
 				$this->serverUrl = $this->iranServer;
 				break;
-                
+
 			case 'test':
 				$this->serverUrl = $this->sandboxServer;
 				$this->gateUrl = $this->sandboxGateUrl;
