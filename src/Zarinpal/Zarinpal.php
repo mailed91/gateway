@@ -8,6 +8,7 @@ use Larabookir\Gateway\Enum;
 use SoapClient;
 use Larabookir\Gateway\PortAbstract;
 use Larabookir\Gateway\PortInterface;
+use App\banks;
 
 class Zarinpal extends PortAbstract implements PortInterface
 {
@@ -146,8 +147,17 @@ class Zarinpal extends PortAbstract implements PortInterface
 		return $this;
 	}
 
-    function setInformation($MerchantID,$Email,$Mobile,$Description)
+    function setInformation($id)
     {
+        $banks = banks::where('id', $id)->take(1)
+            ->get();
+        foreach ($banks as $bank) {
+            $MerchantID = $bank->token;
+            $Description = $bank->description;
+            $Email = $bank->email;
+            $Mobile = $bank->mobile;
+        }
+
         $this->MerchantID = $MerchantID;
         $this->Description = $Description;
         $this->Email = $Email;
